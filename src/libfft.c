@@ -40,7 +40,7 @@ double complex* fft_core(double complex P[], int n)
     for(int i = 0; i < n/2; i++)
     {
         Pe[i] = P[2*i];
-        Po[i] = P[2*i+1];
+        Po[i] = P[(2*i+1)];
     }
 
     double complex* ye = fft_core(Pe, n/2);
@@ -241,7 +241,6 @@ double* fft2(double P_trunkated[], int n, int m, int print_input, int print_outp
                 printf("(%lf, %lf)\n", creal(P[i]), cimag(P[i]));
             }
         }
-
 
         P = fft_core(P, n);
 
