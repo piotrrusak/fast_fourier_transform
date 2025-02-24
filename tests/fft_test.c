@@ -1,4 +1,4 @@
-#include "libfft.h"
+#include "../include/libfft.h"
 
 #include <complex.h>
 #include <stdio.h>

@@ -1,4 +1,4 @@
-#include "libfft.h"
+#include "../include/libfft.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -141,5 +141,3 @@ double* fft(double P_trunkated[], int n, int print_input, int print_output)
 
     return P_trunkated;
 }
-
-

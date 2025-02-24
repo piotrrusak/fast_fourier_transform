@@ -1,15 +1,11 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -fPIC
-LDFLAGS = -shared
-TARGET = fft_test
 
-all: libfft.so $(TARGET)
+all : libfft.so fft_test
 
-libfft.so: libfft.c
-	$(CC) $(CFLAGS) $(LDFLAGS) -o libfft.so libfft.c
+libfft.so : src/libfft.c
+	gcc -Wall -Wextra -fPIC -shared -o build/libfft.so src/libfft.c
 
-$(TARGET): fft_test.c
-	$(CC) -o $(TARGET) fft_test.c -L. -lfft -Wl,-rpath,. -lm
+fft_test : tests/fft_test.c
+	gcc -o build/fft_test tests/fft_test.c build/libfft.so -Wl,-rpath,. -lm
 
 clean:
-	rm -f $(TARGET) libfft.so
+	rm -f fft_test libfft.so
