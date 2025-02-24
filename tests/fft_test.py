@@ -2,25 +2,35 @@ import ctypes
 import os
 
 import numpy as np
+#
+# size = 2 ** 3
+#
+# T = [i for i in range(size)]
+# ad = [0 for i in range(size)]
+#
+# path = os.getcwd()
+# clibrary = ctypes.CDLL(os.path.join(path, '../build/libfft.so'))
+#
+# n = size
+#
+# values = (ctypes.c_double * (2*n))()
+#
+# example = T + ad
+#
+# for i in range(2*n):
+#     values[i] = example[i]
+#
+# clibrary.fft.restype = ctypes.POINTER(ctypes.c_double)
+# result = clibrary.dft(values, n, 0, 1)
+#
+# print(np.fft.fft(T))
 
-size = 2 ** 3
+P = np.array([[1, 3], [2, 4]])
 
-T = [i for i in range(size)]
-ad = [0 for i in range(size)]
+print(np.fft.fft2(P))
 
-path = os.getcwd()
-clibrary = ctypes.CDLL(os.path.join(path, '../build/libfft.so'))
-
-n = size
-
-values = (ctypes.c_double * (2*n))()
-
-example = T + ad
-
-for i in range(2*n):
-    values[i] = example[i]
-
-clibrary.fft.restype = ctypes.POINTER(ctypes.c_double)
-result = clibrary.dft(values, n, 0, 1)
-
-print(np.fft.fft(T))
+# print(np.fft.fft(np.array([1, 2])))
+# print(np.fft.fft(np.array([3, 4])))
+#
+# print(np.fft.fft(np.array([3, 7])))
+# print(np.fft.fft(np.array([-1, -1])))
