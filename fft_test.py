@@ -6,9 +6,6 @@ import numpy as np
 T = [i for i in range(2**5)]
 ad = [0 for i in range(2**5)]
 
-
-
-
 path = os.getcwd()
 clibrary = ctypes.CDLL(os.path.join(path, 'libfft.so'))
 

@@ -5,6 +5,68 @@
 #include <math.h>
 #include <complex.h>
 
+double complex* dft_core(double complex P[], int n)
+{
+    double complex * y = malloc(n * sizeof(double complex));
+    double complex temp;
+    double complex wj;
+
+    for(int k = 0; k < n; k++)
+    {
+        temp = 0 + 0 * I;
+        for(int j = 0; j < n; j++)
+        {
+            wj = cexp(-2.0 * M_PI * I * j * k / n);
+            temp = temp + wj * P[j];
+        }
+        y[k] = temp;
+    }
+
+    return y;
+}
+
+double* dft(double P_trunkated[], int n, int print_input, int print_output)
+{
+    double complex* P = malloc(n * sizeof(double complex));
+
+    for(int i = 0; i < n; i++)
+    {
+        P[i] = P_trunkated[i] + P_trunkated[i + n] * I;
+    }
+
+    if(print_input)
+    {
+
+        printf("Input to dft core:\n");
+        for(int i = 0; i < n; i++)
+        {
+            printf("(%lf, %lf)\n", creal(P[i]), cimag(P[i]));
+        }
+
+    }
+
+    double complex *result = dft_core(P, n);
+
+    for(int i = 0; i < n; i++)
+    {
+        P_trunkated[i] = creal(result[i]);
+        P_trunkated[i + n] = cimag(result[i]);
+    }
+
+    if(print_output)
+    {
+
+        printf("Output from dft core:\n");
+        for(int i = 0; i < n; i++)
+        {
+            printf("(%lf, %lf)\n", creal(result[i]), cimag(result[i]));
+        }
+
+    }
+
+    return P_trunkated;
+}
+
 double complex* fft_core(double complex P[], int n)
 {
     if(n == 1)
@@ -38,34 +100,27 @@ double complex* fft_core(double complex P[], int n)
     return y;
 }
 
-double* fft(double P_trunkated[], int n)
+double* fft(double P_trunkated[], int n, int print_input, int print_output)
 {
     double complex* P = malloc(n * sizeof(double complex));
-
-    printf("Input to fft:\n");
-    for(int i = 0; i < 2 * n; i++)
-    {
-        printf("%lf\n", P_trunkated[i]);
-    }
 
     for(int i = 0; i < n; i++)
     {
         P[i] = P_trunkated[i] + P_trunkated[i + n] * I;
     }
 
-    printf("Input to core:\n");
-    for(int i = 0; i < n; i++)
+    if(print_input)
     {
-        printf("(%lf, %lf)\n", creal(P[i]), cimag(P[i]));
+
+        printf("Input to fft core:\n");
+        for(int i = 0; i < n; i++)
+        {
+            printf("(%lf, %lf)\n", creal(P[i]), cimag(P[i]));
+        }
+
     }
 
     double complex *result = fft_core(P, n);
-
-    printf("Output from core:\n");
-    for(int i = 0; i < n; i++)
-    {
-        printf("(%lf, %lf)\n", creal(result[i]), cimag(result[i]));
-    }
 
     for(int i = 0; i < n; i++)
     {
@@ -73,11 +128,18 @@ double* fft(double P_trunkated[], int n)
         P_trunkated[i + n] = cimag(result[i]);
     }
 
-    printf("Output from fft:\n");
-    for(int i = 0; i < 2 * n; i++)
+    if(print_output)
     {
-        printf("%lf\n", P_trunkated[i]);
+
+        printf("Output from fft core:\n");
+        for(int i = 0; i < n; i++)
+        {
+            printf("(%lf, %lf)\n", creal(result[i]), cimag(result[i]));
+        }
+
     }
 
     return P_trunkated;
 }
+
+
