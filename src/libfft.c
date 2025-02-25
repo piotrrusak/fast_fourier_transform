@@ -297,3 +297,32 @@ double* fft2(double P_trunkated[], int n, int m, int print_input, int print_outp
 
     return P_trunkated;
 }
+
+void transpose_complex_matrix(struct ComplexMatrix* complex_matrix)
+{
+    double complex temp;
+
+    for(int i = 0; i < complex_matrix->m; i++)
+    {
+        for(int j = i+1; j < complex_matrix->n; j++)
+        {
+            temp = complex_matrix->complex_matrix[i][j];
+            complex_matrix->complex_matrix[i][j] = complex_matrix->complex_matrix[j][i];
+            complex_matrix->complex_matrix[j][i] = temp;
+        }
+    }
+}
+
+void print_complex_matrix(struct ComplexMatrix complex_matrix)
+{
+    transpose_complex_matrix(&complex_matrix);
+    printf("%d, %d\n", complex_matrix.m, complex_matrix.n);
+    for(int i = 0; i < complex_matrix.m; i++)
+    {
+        for(int j = 0; j < complex_matrix.n; j++)
+        {
+            printf("%lf %lfi, ", creal(complex_matrix.complex_matrix[i][j]), cimag(complex_matrix.complex_matrix[i][j]));
+        }
+        printf("\n");
+    }
+}
