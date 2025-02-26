@@ -14,11 +14,12 @@
   <component name="ChangeListManager">
     <list default="true" id="d802e2ee-bd97-461c-a1d3-7cf2b9637974" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/fft_test" beforeDir="false" afterPath="$PROJECT_DIR$/build/fft_test" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/libfft.so" beforeDir="false" afterPath="$PROJECT_DIR$/build/libfft.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/libfft.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/libfft.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libfft.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/libfft.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/fft_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fft_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/fft_test.c" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fft_test.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,6 +107,7 @@
       <workItem from="1740430137651" duration="5534000" />
       <workItem from="1740438072223" duration="620000" />
       <workItem from="1740486833485" duration="1992000" />
+      <workItem from="1740521969135" duration="5622000" />
     </task>
     <servers />
   </component>
@@ -113,7 +115,7 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/fast_fourier_transform$test.coverage" NAME="test Coverage Results" MODIFIED="1740503518897" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/fast_fourier_transform$test.coverage" NAME="test Coverage Results" MODIFIED="1740528358588" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/fast_fourier_transform$ffy.coverage" NAME="ffy Coverage Results" MODIFIED="1740329912489" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/fast_fourier_transform$fft_test.coverage" NAME="fft_test Coverage Results" MODIFIED="1740489788346" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
   </component>

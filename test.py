@@ -1,5 +1,10 @@
+import copy
 import ctypes
 import os
+import random
+import time
+
+import numpy as np
 
 class Complex(ctypes.Structure):
     _fields_ = [("real", ctypes.c_double), ("imag", ctypes.c_double)]
@@ -25,16 +30,50 @@ class ComplexMatrix(ctypes.Structure):
         matrix = [one_dim_complex_array(*[Complex(complex(c).real, complex(c).imag) for c in row]) for row in complex_matrix]
         self.complex_matrix = two_dim_complex_array(*matrix)
 
+
 complex_matrix = [
-    [complex(1, 2), complex(3, 4), complex(5, 6)],
-    [complex(7, 8), complex(9, -10), complex(11, 12)],
-    [complex(13, 14), complex(15, 16), complex(17, 18)],
-    [complex(19, 20), complex(21, 22), complex(23, 24)]
+    [complex(1, 0), complex(2, 0), complex(3, 0), complex(4, 0)],
+    [complex(1, 0), complex(2, 0), complex(3, 0), complex(4, 0)],
+    [complex(1, 0), complex(2, 0), complex(3, 0), complex(4, 0)],
+    [complex(1, 0), complex(2, 0), complex(3, 0), complex(4, 0)]
 ]
 
-path = os.getcwd()
-clibrary = ctypes.CDLL(os.path.join(path, 'build/libfft.so'))
+m = 16
+n = 16
 
-complex_matrix = ComplexMatrix(complex_matrix, 3, 3)
+complex_matrix = [[complex(random.randint(0, 9), random.randint(0, 9)) for _ in range(n)] for _ in range(m)]
 
-clibrary.print_complex_matrix(complex_matrix)
+def complex_matrix_to_numpy(c_matrix):
+    rows, cols = c_matrix.m, c_matrix.n
+
+    result = np.zeros((rows, cols), dtype=np.complex128)
+
+    for i in range(rows):
+        row_pointer = c_matrix.complex_matrix[i]
+        for j in range(cols):
+            complex_val = row_pointer[j]
+            result[i, j] = complex_val.real + 1j * complex_val.imag
+
+    return result
+
+start = time.time()
+np.fft.fft2(complex_matrix)
+end = time.time()
+print(end - start)
+
+def own_fft2(complex_matrix, m, n):
+    path = os.getcwd()
+    clibrary = ctypes.CDLL(os.path.join(path, 'build/libfft.so'))
+
+    complex_matrix_obj = ComplexMatrix(complex_matrix, m, n)
+
+    clibrary.fft2.restype = ComplexMatrix
+
+    result = clibrary.fft2(complex_matrix_obj)
+
+    return complex_matrix_to_numpy(result)
+
+start = time.time()
+own_fft2(complex_matrix, m, n)
+end = time.time()
+print(end - start)

@@ -142,162 +142,6 @@ double* fft(double P_trunkated[], int n, int print_input, int print_output)
     return P_trunkated;
 }
 
-double* dft2(double P_trunkated[], int n, int m, int print_input, int print_output)
-{
-    double complex* P = malloc(n * sizeof(double complex));
-
-    for(int j = 0; j < m; j++)
-    {
-
-        for(int i = 0; i < n; i++)
-        {
-            P[i] = P_trunkated[j * n + i] + P_trunkated[j * n + i + m * n] * I;
-        }
-
-        if(print_input)
-        {
-            printf("Input to fft:\n");
-            for(int i = 0; i < n; i++)
-            {
-                printf("(%lf, %lf)\n", creal(P[i]), cimag(P[i]));
-            }
-        }
-
-
-        P = dft_core(P, n);
-
-        if(print_output)
-        {
-            printf("Output from fft:\n");
-            for(int i = 0; i < n; i++)
-            {
-                printf("(%lf, %lf)\n", creal(P[i]), cimag(P[i]));
-            }
-        }
-
-        for(int i = 0; i < n; i++)
-        {
-            P_trunkated[j * n + i] = creal(P[i]);
-            P_trunkated[j * n + i + m * n] = cimag(P[i]);
-        }
-    }
-
-    for(int i = 0; i < n; i++)
-    {
-
-        for(int j = 0; j < m; j++)
-        {
-            P[j] = P_trunkated[j * n + i] + P_trunkated[j * n + i + m * n] * I;
-        }
-
-        if(print_input)
-        {
-            printf("Input to fft:\n");
-            for(int j = 0; j < m; j++)
-            {
-                printf("(%lf, %lf)\n", creal(P[j]), cimag(P[j]));
-            }
-        }
-
-        P = dft_core(P, m);
-
-        if(print_output)
-        {
-            printf("Output from fft:\n");
-            for(int j = 0; j < n; j++)
-            {
-                printf("(%lf, %lf)\n", creal(P[j]), cimag(P[j]));
-            }
-        }
-
-        for(int j = 0; j < n; j++)
-        {
-            P_trunkated[j * n + i] = creal(P[j]);
-            P_trunkated[j * n + i + m * n] = cimag(P[j]);
-        }
-    }
-
-    return P_trunkated;
-}
-
-
-double* fft2(double P_trunkated[], int n, int m, int print_input, int print_output)
-{
-    double complex* P = malloc(n * sizeof(double complex));
-
-    for(int j = 0; j < m; j++)
-    {
-
-        for(int i = 0; i < n; i++)
-        {
-            P[i] = P_trunkated[j * n + i] + P_trunkated[j * n + i + m * n] * I;
-        }
-
-        if(print_input)
-        {
-            printf("Input to fft:\n");
-            for(int i = 0; i < n; i++)
-            {
-                printf("(%lf, %lf)\n", creal(P[i]), cimag(P[i]));
-            }
-        }
-
-        P = fft_core(P, n);
-
-        if(print_output)
-        {
-            printf("Output from fft:\n");
-            for(int i = 0; i < n; i++)
-            {
-                printf("(%lf, %lf)\n", creal(P[i]), cimag(P[i]));
-            }
-        }
-
-        for(int i = 0; i < n; i++)
-        {
-            P_trunkated[j * n + i] = creal(P[i]);
-            P_trunkated[j * n + i + m * n] = cimag(P[i]);
-        }
-    }
-
-    for(int i = 0; i < n; i++)
-    {
-
-        for(int j = 0; j < m; j++)
-        {
-            P[j] = P_trunkated[j * n + i] + P_trunkated[j * n + i + m * n] * I;
-        }
-
-        if(print_input)
-        {
-            printf("Input to fft:\n");
-            for(int j = 0; j < m; j++)
-            {
-                printf("(%lf, %lf)\n", creal(P[j]), cimag(P[j]));
-            }
-        }
-
-        P = fft_core(P, m);
-
-        if(print_output)
-        {
-            printf("Output from fft:\n");
-            for(int j = 0; j < n; j++)
-            {
-                printf("(%lf, %lf)\n", creal(P[j]), cimag(P[j]));
-            }
-        }
-
-        for(int j = 0; j < n; j++)
-        {
-            P_trunkated[j * n + i] = creal(P[j]);
-            P_trunkated[j * n + i + m * n] = cimag(P[j]);
-        }
-    }
-
-    return P_trunkated;
-}
-
 void transpose_complex_matrix(struct ComplexMatrix* complex_matrix)
 {
     double complex temp;
@@ -315,8 +159,9 @@ void transpose_complex_matrix(struct ComplexMatrix* complex_matrix)
 
 void print_complex_matrix(struct ComplexMatrix complex_matrix)
 {
-    transpose_complex_matrix(&complex_matrix);
-    printf("%d, %d\n", complex_matrix.m, complex_matrix.n);
+
+    printf("Shape: %d, %d\n", complex_matrix.m, complex_matrix.n);
+
     for(int i = 0; i < complex_matrix.m; i++)
     {
         for(int j = 0; j < complex_matrix.n; j++)
@@ -325,4 +170,24 @@ void print_complex_matrix(struct ComplexMatrix complex_matrix)
         }
         printf("\n");
     }
+}
+
+struct ComplexMatrix fft2(struct ComplexMatrix complex_matrix)
+{
+
+    transpose_complex_matrix(&complex_matrix);
+
+    for (int i = 0; i < complex_matrix.n; i++)
+    {
+        complex_matrix.complex_matrix[i] = fft_core(complex_matrix.complex_matrix[i], complex_matrix.m);
+    }
+
+    transpose_complex_matrix(&complex_matrix);
+
+    for (int j = 0; j < complex_matrix.m; j++)
+    {
+        complex_matrix.complex_matrix[j] = fft_core(complex_matrix.complex_matrix[j], complex_matrix.n);
+    }
+
+    return complex_matrix;
 }

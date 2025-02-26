@@ -17,13 +17,9 @@ double* dft(double P[], int n, int print_input, int print_output);
 
 double* fft(double P[], int n, int print_input, int print_output);
 
-double* dft2(double P[], int n, int m, int print_input, int print_output);
-
-double* fft2(double P[], int n, int m, int print_input, int print_output);
-
 void transpose_complex_matrix(struct ComplexMatrix* complex_matrix);
 
-struct ComplexMatrix fft22(struct ComplexMatrix* complex_matrix, int m, int n);
+struct ComplexMatrix fft2(struct ComplexMatrix complex_matrix);
 
 void print_complex_matrix(struct ComplexMatrix complex_matrix);
 
