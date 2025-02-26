@@ -1,9 +1,27 @@
-# FFT and FFT2
+# Fast Fourier Transform
+
 FT library written in C. Used mainly by ctypes in Python.
 
+## Function fft2():
 
-# To Do:
-Actually it works only for powers of 2. Because when i part polynominal to odd and even part, i'm loosing some coefficients. I don't want to fix it couse it will affect efficiency.
-In python implemented API, I extend matrix to the closest power of two size.
+Input:
 
-Use strides for improving efficiency
+Matrix (two dimentional array)
+
+Output:
+
+Matrix (two dimentional array)
+
+## How works?
+
+Performs regular fft on columns, than transpose matrix, performs regular fft on columns and transpose matrix again.
+
+# How fast is it?
+
+fft2 has complexity of O(n^2 * log2(n^2))
+
+## To Do:
+
+Use strides in order to significantly improve efficiency.
+
+Upgrade fft_core to make it work on other sizes than powers of two.
