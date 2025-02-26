@@ -1,126 +1,96 @@
 import ctypes
 import os
 import random
-from time import time
+import time
 
 import numpy as np
 
-# def trunk_2_dim_array(T, m, n):
-#     T_trunkated = []
-#     for i in range(n):
-#         for j in range(m):
-#             T_trunkated.append(T[j][i].real)
-#     for i in range(n):
-#         for j in range(m):
-#             T_trunkated.append(T[j][i].imag)
-#     return T_trunkated
-#
-# def retrunk_2_dim_array(T_trunkated, m, n):
-#     T = [[0 for _ in range(n)] for _ in range(m)]
-#     k = 0
-#
-#     i = 0
-#     while i < n:
-#         j = 0
-#         while j < m:
-#             T[j][i] += T_trunkated[k]
-#             j += 1
-#             k += 1
-#         i += 1
-#
-#     i = 0
-#     while i < n:
-#         j = 0
-#         while j < m:
-#             T[j][i] += 1j * T_trunkated[k]
-#             j += 1
-#             k += 1
-#         i += 1
-#
-#     return T
-#
-# def extend_to_two_power(T, m, n):
-#     new_size = 2 ** np.ceil(np.log2(max(m, n)))
-#     return np.pad(T, pad_width=((0, int(new_size - m)), (0, int(new_size - n))), mode='constant', constant_values=0)
-#
-# def fft(T, m, n):
-#     path = os.getcwd()
-#     clibrary = ctypes.CDLL(os.path.join(path, '../build/libfft.so'))
-#     T_trunkated = trunk_2_dim_array(T, m, n)
-#     values = (ctypes.c_double * (m * n * 2))()
-#     for i in range(m * n * 2):
-#         values[i] = T_trunkated[i]
-#     clibrary.fft2.restype = ctypes.POINTER(ctypes.c_double)
-#     result = clibrary.fft2(values, n, m, 0, 0)
-#     for i in range(m * n * 2):
-#         T_trunkated[i] = result[i]
-#     result = retrunk_2_dim_array(T_trunkated, m, n)
-#
-# m = 1024
-# n = 1024
-#
-# T = [[random.randint(0, 9) for i in range(n)] for _ in range(m)]
-# T = extend_to_two_power(T, m, n)
-#
-# new_size = int(2 ** np.ceil(np.log2(max(m, n))))
-#
-# m = new_size
-# n = new_size
-#
-# start = time()
-#
-# result = np.fft.fft2(T)
-#
-# end = time()
-#
-# print(end - start)
-#
-# path = os.getcwd()
-# clibrary = ctypes.CDLL(os.path.join(path, '../build/libfft.so'))
-# T_trunkated = trunk_2_dim_array(T, m, n)
-# values = (ctypes.c_double * (m * n * 2))()
-# for i in range(m * n * 2):
-#     values[i] = T_trunkated[i]
-# clibrary.fft2.restype = ctypes.POINTER(ctypes.c_double)
-# start = time()
-# result = clibrary.fft2(values, n, m, 0, 0)
-# end = time()
-# for i in range(m * n * 2):
-#     T_trunkated[i] = result[i]
-# result = retrunk_2_dim_array(T_trunkated, m, n)
-#
-#
-#
-# print(end - start)
+class Complex(ctypes.Structure):
+    _fields_ = [("real", ctypes.c_double), ("imag", ctypes.c_double)]
 
-k = 9192
+class ComplexMatrix(ctypes.Structure):
+    _fields_ = [
+        ("complex_matrix", ctypes.POINTER(ctypes.POINTER(Complex))),
+        ("m", ctypes.c_int),
+        ("n", ctypes.c_int),
+    ]
 
-T_trunkated = [random.uniform(0, 9) for _ in range(k)]
+    def __init__(self, complex_matrix, m, n):
 
-ad = [0.0 for _ in range(k)]
+        self.m = m
+        self.n = n
 
-example = T_trunkated + ad
+        rows = len(complex_matrix)
+        cols = len(complex_matrix[0]) if rows > 0 else 0
 
-start = time()
+        one_dim_complex_array = Complex * cols
+        two_dim_complex_array = ctypes.POINTER(Complex) * rows
 
-result = np.fft.fft(T_trunkated)
+        matrix = [one_dim_complex_array(*[Complex(complex(c).real, complex(c).imag) for c in row]) for row in complex_matrix]
+        self.complex_matrix = two_dim_complex_array(*matrix)
 
-end = time()
+def complex_matrix_to_numpy(c_matrix):
+    rows, cols = c_matrix.m, c_matrix.n
 
-print(end - start)
+    result = np.zeros((rows, cols), dtype=np.complex128)
 
-start = time()
-path = os.getcwd()
-clibrary = ctypes.CDLL(os.path.join(path, '../build/libfft.so'))
-values = (ctypes.c_double * (k * 2))()
-for i in range(k * 2):
-    values[i] = example[i]
-clibrary.fft.restype = ctypes.POINTER(ctypes.c_double)
+    for i in range(rows):
+        row_pointer = c_matrix.complex_matrix[i]
+        for j in range(cols):
+            complex_val = row_pointer[j]
+            result[i, j] = complex_val.real + 1j * complex_val.imag
 
-result = clibrary.fft(values, k, 0, 0)
+    return result
 
-example = result[0: k * 2]
-end = time()
-print(end-start)
-# print(T_trunkated)
+def fft2(complex_matrix, m, n):
+    path = os.getcwd()
+    clibrary = ctypes.CDLL(os.path.join(path, '../build/libfft.so'))
 
+    complex_matrix_obj = ComplexMatrix(complex_matrix, m, n)
+
+    clibrary.fft2.restype = ComplexMatrix
+
+    result = clibrary.fft2(complex_matrix_obj)
+
+    return complex_matrix_to_numpy(result)
+
+
+
+N = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]
+
+T1 = []
+T2 = []
+
+for i in N:
+    m = i
+    n = i
+
+    complex_matrix = [[complex(random.randint(0, 9), random.randint(0, 9)) for _ in range(n)] for _ in range(m)]
+
+    start = time.time()
+    np.fft.fft2(complex_matrix)
+    end = time.time()
+    T1.append(end - start)
+    print(end - start)
+
+    start = time.time()
+    fft2(complex_matrix, m, n)
+    end = time.time()
+    T2.append(end - start)
+    print(end - start)
+
+import matplotlib.pyplot as plt
+
+plt.plot(N, T1, marker='o', linestyle='-', color='b', label="Numpy FFT")
+plt.plot(N, T2, marker='s', linestyle='--', color='r', label="Own FFT")
+
+plt.xlabel("N")
+plt.ylabel("Czas")
+
+plt.title("Porównanie Numpy FFT vs Own FFT")
+
+plt.legend()
+
+plt.grid(True)
+
+plt.show()

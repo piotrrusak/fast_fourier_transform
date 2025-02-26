@@ -1,4 +1,3 @@
-import copy
 import ctypes
 import os
 import random
@@ -29,14 +28,6 @@ class ComplexMatrix(ctypes.Structure):
 
         matrix = [one_dim_complex_array(*[Complex(complex(c).real, complex(c).imag) for c in row]) for row in complex_matrix]
         self.complex_matrix = two_dim_complex_array(*matrix)
-
-
-complex_matrix = [
-    [complex(1, 0), complex(2, 0), complex(3, 0), complex(4, 0)],
-    [complex(1, 0), complex(2, 0), complex(3, 0), complex(4, 0)],
-    [complex(1, 0), complex(2, 0), complex(3, 0), complex(4, 0)],
-    [complex(1, 0), complex(2, 0), complex(3, 0), complex(4, 0)]
-]
 
 m = 16
 n = 16
