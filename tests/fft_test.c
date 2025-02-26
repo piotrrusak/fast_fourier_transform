@@ -1,13 +1,35 @@
 #include "../include/libfft.h"
 
-void main()
+#include <stdlib.h>
+#include <complex.h>
+
+int main()
 {
-//    double P1[8] = {3, 4, 5, 6, 0, 0, 0 ,0};
-//    double *temp1 = dft(P1, 4, 0, 0);
-    double P2[8] = {1, 1, 1, 0, 0, 0};
-    double *temp2 = fft(P2, 3, 0, 1);
-//    double P3[8] = {1, 2, 3, 4, 0, 0, 0, 0};
-//    double *temp3 = dft2(P3, 2, 2, 0, 0);
-//    double P4[8] = {1, 2, 3, 4, 0, 0, 0, 0};
-//    double *temp4 = fft2(P4, 2, 2, 0, 0);
+
+    int k = 4;
+
+    double complex** temp = malloc(k * sizeof(double complex*));
+    for(int i = 0; i < k; i++) {
+        temp[i] = malloc(k * sizeof(double complex));
+    }
+
+
+    for(int i = 0; i < k; i++)
+    {
+        for(int j = 0; j < k; j++)
+        {
+            temp[i][j] = (rand() % 10) + (rand() % 10) * I;
+
+        }
+    }
+
+    struct ComplexMatrix complex_matrix;
+
+    complex_matrix.complex_matrix = temp;
+    complex_matrix.m = k;
+    complex_matrix.n = k;
+
+    complex_matrix = fft2(complex_matrix);
+
+    return 1;
 }

@@ -73,16 +73,16 @@ void transpose_complex_matrix(struct ComplexMatrix* complex_matrix)
     }
 }
 
-void print_complex_matrix(struct ComplexMatrix complex_matrix)
+void print_complex_matrix(struct ComplexMatrix* complex_matrix)
 {
 
-    printf("Shape: %d, %d\n", complex_matrix.m, complex_matrix.n);
+    printf("Shape: %d, %d\n", complex_matrix->m, complex_matrix->n);
 
-    for(int i = 0; i < complex_matrix.m; i++)
+    for(int i = 0; i < complex_matrix->m; i++)
     {
-        for(int j = 0; j < complex_matrix.n; j++)
+        for(int j = 0; j < complex_matrix->n; j++)
         {
-            printf("%lf %lfi, ", creal(complex_matrix.complex_matrix[i][j]), cimag(complex_matrix.complex_matrix[i][j]));
+            printf("%lf %lfi, ", creal(complex_matrix->complex_matrix[i][j]), cimag(complex_matrix->complex_matrix[i][j]));
         }
         printf("\n");
     }

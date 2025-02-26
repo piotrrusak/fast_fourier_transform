@@ -50,7 +50,7 @@ def fft2(complex_matrix, m, n):
 
     clibrary.fft2.restype = ComplexMatrix
 
-    result = clibrary.fft2(complex_matrix_obj)
+    result = clibrary.fft2(complex_matrix_obj, 0, 0)
 
     return complex_matrix_to_numpy(result)
 
